@@ -119,11 +119,31 @@ namespace ClientCore
 
         #endregion
 
+        #region Sound options
+
+        public float SoundGameLobbyJoinCooldown => DTACnCNetClient_ini.GetSingleValue(GENERAL, "SoundGameLobbyJoinCooldown", 0.25f);
+
+        public float SoundGameLobbyLeaveCooldown => DTACnCNetClient_ini.GetSingleValue(GENERAL, "SoundGameLobbyLeaveCooldown", 0.25f);
+
+        public float SoundMessageCooldown => DTACnCNetClient_ini.GetSingleValue(GENERAL, "SoundMessageCooldown", 0.25f);
+
+        public float SoundPrivateMessageCooldown => DTACnCNetClient_ini.GetSingleValue(GENERAL, "SoundPrivateMessageCooldown", 0.25f);
+
+        public float SoundGameLobbyGetReadyCooldown => DTACnCNetClient_ini.GetSingleValue(GENERAL, "SoundGameLobbyGetReadyCooldown", 5.0f);
+
+        public float SoundGameLobbyReturnCooldown => DTACnCNetClient_ini.GetSingleValue(GENERAL, "SoundGameLobbyReturnCooldown", 1.0f);
+
+        #endregion
+
         #endregion
 
         #region Game options
 
         public string Sides => gameOptions_ini.GetStringValue(GENERAL, "Sides", "GDI,Nod,Allies,Soviet");
+
+        public string InternalSideIds => gameOptions_ini.GetStringValue(GENERAL, "InternalSideIds", string.Empty);
+
+        public string SpectatorInternalSideId => gameOptions_ini.GetStringValue(GENERAL, "SpectatorInternalSideId", string.Empty);
 
         #endregion
 
@@ -156,6 +176,8 @@ namespace ClientCore
         public string CnCNetLiveStatusIdentifier => clientDefinitionsIni.GetStringValue(SETTINGS, "CnCNetLiveStatusIdentifier", "cncnet5_ts");
 
         public string BattleFSFileName => clientDefinitionsIni.GetStringValue(SETTINGS, "BattleFSFileName", "BattleFS.ini");
+
+        public string BattleYRFileName => clientDefinitionsIni.GetStringValue(SETTINGS, "BattleYRFileName", "BattleYR.ini");
 
         public string MapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "MapEditorExePath", "FinalSun\\FinalSun.exe");
 

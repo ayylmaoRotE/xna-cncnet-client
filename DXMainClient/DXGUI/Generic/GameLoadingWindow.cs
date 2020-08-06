@@ -157,7 +157,7 @@ namespace DTAClient.DXGUI.Generic
             File.Delete(ProgramConstants.GamePath + SAVED_GAMES_DIRECTORY + Path.DirectorySeparatorChar + sg.FileName);
             ListSaves();
         }
-        
+
         private void GameProcessExited_Callback()
         {
             WindowManager.AddCallback(new Action(GameProcessExited), null);

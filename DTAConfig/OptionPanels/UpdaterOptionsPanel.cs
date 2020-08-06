@@ -1,4 +1,4 @@
-﻿using ClientCore;
+using ClientCore;
 using ClientGUI;
 using Microsoft.Xna.Framework;
 using Rampastring.XNAUI;
@@ -141,14 +141,15 @@ namespace DTAConfig.OptionPanels
             lbUpdateServerList.Clear();
 
             foreach (var updaterMirror in CUpdater.UPDATEMIRRORS)
-                lbUpdateServerList.AddItem(updaterMirror.Name + " (" + updaterMirror.Location + ")");
+                lbUpdateServerList.AddItem(updaterMirror.Name + (!string.IsNullOrEmpty(updaterMirror.Location) ? 
+                    " (" + updaterMirror.Location + ")" : ""));
 
             chkAutoCheck.Checked = IniSettings.CheckForUpdates;
         }
 
         public override bool Save()
         {
-            base.Save();
+            bool restartRequired = base.Save();
 
             IniSettings.CheckForUpdates.Value = chkAutoCheck.Checked;
 
@@ -162,7 +163,7 @@ namespace DTAConfig.OptionPanels
                 id++;
             }
 
-            return false;
+            return restartRequired;
         }
 
         public override void ToggleMainMenuOnlyOptions(bool enable)

@@ -109,6 +109,13 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnCredits;
         private XNAClientButton btnExtras;
 
+        //RotE Additions
+        private XNAClientButton btnCampaignRA2;
+        private XNAClientButton btnCampaignYR;
+        private XNAClientButton btnCampaignGEN;
+        private XNAClientButton btnCampaignROTE;
+        private XNAClientButton btnChallenge;
+
         /// <summary>
         /// Initializes the main menu's controls.
         /// </summary>
@@ -199,6 +206,44 @@ namespace DTAClient.DXGUI.Generic
             btnExit.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
             btnExit.LeftClick += BtnExit_LeftClick;
 
+            // RotE Additions
+
+            btnCampaignRA2 = new XNAClientButton(WindowManager);
+            btnCampaignRA2.Name = "btnCampaignRA2";
+            btnCampaignRA2.IdleTexture = AssetLoader.LoadTexture("MainMenu\\campaign.png");
+            btnCampaignRA2.HoverTexture = AssetLoader.LoadTexture("MainMenu\\campaign_c.png");
+            btnCampaignRA2.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnCampaignRA2.LeftClick += BtnCampaignRA2_LeftClick;
+
+            btnCampaignYR = new XNAClientButton(WindowManager);
+            btnCampaignYR.Name = "btnCampaignYR";
+            btnCampaignYR.IdleTexture = AssetLoader.LoadTexture("MainMenu\\campaign.png");
+            btnCampaignYR.HoverTexture = AssetLoader.LoadTexture("MainMenu\\campaign_c.png");
+            btnCampaignYR.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnCampaignYR.LeftClick += BtnCampaignYR_LeftClick;
+
+            btnCampaignGEN = new XNAClientButton(WindowManager);
+            btnCampaignGEN.Name = "btnCampaignGEN";
+            btnCampaignGEN.IdleTexture = AssetLoader.LoadTexture("MainMenu\\campaign.png");
+            btnCampaignGEN.HoverTexture = AssetLoader.LoadTexture("MainMenu\\campaign_c.png");
+            btnCampaignGEN.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnCampaignGEN.LeftClick += BtnCampaignGEN_LeftClick;
+
+            btnCampaignROTE = new XNAClientButton(WindowManager);
+            btnCampaignROTE.Name = "btnCampaignROTE";
+            btnCampaignROTE.IdleTexture = AssetLoader.LoadTexture("MainMenu\\campaign.png");
+            btnCampaignROTE.HoverTexture = AssetLoader.LoadTexture("MainMenu\\campaign_c.png");
+            btnCampaignROTE.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnCampaignROTE.LeftClick += BtnCampaignROTE_LeftClick;
+
+            btnChallenge = new XNAClientButton(WindowManager);
+            btnChallenge.Name = "btnChallenge";
+            btnChallenge.IdleTexture = AssetLoader.LoadTexture("MainMenu\\campaign.png");
+            btnChallenge.HoverTexture = AssetLoader.LoadTexture("MainMenu\\campaign_c.png");
+            btnChallenge.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnChallenge.LeftClick += BtnChallenge_LeftClick;
+
+
             XNALabel lblCnCNetStatus = new XNALabel(WindowManager);
             lblCnCNetStatus.Name = "lblCnCNetStatus";
             lblCnCNetStatus.Text = "DTA players on CnCNet:";
@@ -258,6 +303,7 @@ namespace DTAClient.DXGUI.Generic
 
             innerPanel.UpdateQueryWindow.UpdateDeclined += UpdateQueryWindow_UpdateDeclined;
             innerPanel.UpdateQueryWindow.UpdateAccepted += UpdateQueryWindow_UpdateAccepted;
+            innerPanel.ManualUpdateQueryWindow.Closed += ManualUpdateQueryWindow_Closed;
 
             innerPanel.UpdateWindow.UpdateCompleted += UpdateWindow_UpdateCompleted;
             innerPanel.UpdateWindow.UpdateCancelled += UpdateWindow_UpdateCancelled;
@@ -489,7 +535,12 @@ namespace DTAClient.DXGUI.Generic
 
             if (!ClientConfiguration.Instance.ModMode)
             {
-                if (UserINISettings.Instance.CheckForUpdates)
+                if (CUpdater.UPDATEMIRRORS.Count < 1)
+                {
+                    lblUpdateStatus.Text = "No update download mirrors available.";
+                    lblUpdateStatus.DrawUnderline = false;
+                }
+                else if (UserINISettings.Instance.CheckForUpdates)
                 {
                     CheckForUpdates();
                 }
@@ -580,6 +631,8 @@ namespace DTAClient.DXGUI.Generic
         /// </summary>
         private void CheckForUpdates()
         {
+            if (CUpdater.UPDATEMIRRORS.Count < 1)
+                return;
             CUpdater.CheckForUpdates();
             lblUpdateStatus.Enabled = false;
             lblUpdateStatus.Text = "Checking for updates...";
@@ -611,6 +664,15 @@ namespace DTAClient.DXGUI.Generic
                 lblUpdateStatus.Text = MainClientConstants.GAME_NAME_SHORT + " is up to date.";
                 lblUpdateStatus.Enabled = true;
                 lblUpdateStatus.DrawUnderline = false;
+            }
+            else if (CUpdater.DTAVersionState == VersionState.OUTDATED && CUpdater.ManualUpdateRequired)
+            {
+                lblUpdateStatus.Text = "An update is available. Manual download & installation required.";
+                lblUpdateStatus.Enabled = true;
+                lblUpdateStatus.DrawUnderline = false;
+                innerPanel.ManualUpdateQueryWindow.SetInfo(CUpdater.ServerGameVersion, CUpdater.ManualDownloadURL);
+                if (!string.IsNullOrEmpty(CUpdater.ManualDownloadURL))
+                    innerPanel.Show(innerPanel.ManualUpdateQueryWindow);
             }
             else if (CUpdater.DTAVersionState == VersionState.OUTDATED)
             {
@@ -687,6 +749,11 @@ namespace DTAClient.DXGUI.Generic
             CUpdater.StartAsyncUpdate();
         }
 
+        private void ManualUpdateQueryWindow_Closed(object sender, EventArgs e)
+        {
+            innerPanel.Hide();
+        }
+
         #endregion
 
         private void BtnOptions_LeftClick(object sender, EventArgs e)
@@ -696,7 +763,33 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnNewCampaign_LeftClick(object sender, EventArgs e)
         {
-            innerPanel.Show(innerPanel.CampaignSelector);
+            innerPanel.Show(innerPanel.CampaignWindow);
+ ///           innerPanel.Show(innerPanel.CampaignSelector);
+        }
+
+        private void BtnCampaignRA2_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorRA2);
+        }
+
+        private void BtnCampaignYR_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorYR);
+        }
+
+        private void BtnCampaignGEN_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorGEN);
+        }
+
+        private void BtnCampaignROTE_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorROTE);
+        }
+
+        private void BtnChallenge_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.ChallengeSelector);
         }
 
         private void BtnLoadGame_LeftClick(object sender, EventArgs e)

@@ -311,7 +311,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             tbMapSearch.Name = "tbMapSearch";
             tbMapSearch.ClientRectangle = new Rectangle(lbMapList.X,
                 lbMapList.Bottom + 3, lbMapList.Width, 21);
-            tbMapSearch.Suggestion = "Search map..";
+            tbMapSearch.Suggestion = "Search map...";
             tbMapSearch.MaximumTextLength = 64;
             tbMapSearch.InputReceived += TbMapSearch_InputReceived;
 
@@ -778,7 +778,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 try
                 {
                     string[] tmp = GameOptionsIni.GetStringValue("RandomSelectors", randomSelector, string.Empty).Split(',');
-                    randomSides = Array.ConvertAll<string, int>(tmp, int.Parse).Distinct().ToList();
+                    randomSides = Array.ConvertAll(tmp, int.Parse).Distinct().ToList();
                     randomSides.RemoveAll(x => (x >= SideCount || x < 0));
                 }
                 catch (FormatException) { }
@@ -804,10 +804,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <summary>
         /// Resets Discord Rich Presence to default state.
         /// </summary>
-        protected void ResetDiscordPresence()
-        {
-            discordHandler?.UpdatePresence();
-        }
+        protected void ResetDiscordPresence() => discordHandler?.UpdatePresence();
 
         protected void LoadDefaultMap()
         {
@@ -864,9 +861,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 {
                     //dd.Items[0].Selectable = false;
                     for (int i = 0; i < RandomSelectorCount; i++)
-                    {
                         dd.Items[i].Selectable = false;
-                    }
                 }
             }
             else
@@ -875,9 +870,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 {
                     //dd.Items[0].Selectable = true;
                     for (int i = 0; i < RandomSelectorCount; i++)
-                    {
                         dd.Items[i].Selectable = true;
-                    }
                 }
             }
 
@@ -885,24 +878,28 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             // Disable custom random groups if all or all except one of included sides are unavailable.
             int c = 0;
-            foreach (int[] randomsides in RandomSelectors)
+            foreach (int[] randomSides in RandomSelectors)
             {
-                int disablecount = 0;
-                foreach (int side in randomsides)
+                int disableCount = 0;
+
+                foreach (int side in randomSides)
                 {
-                    if (disallowedSideArray[side]) disablecount++;
+                    if (disallowedSideArray[side])
+                        disableCount++;
                 }
+
                 bool disabled = false;
-                if (disablecount >= randomsides.Length - 1) disabled = true;
+                if (disableCount >= randomSides.Length - 1) disabled = true;
+
                 foreach (XNADropDown dd in ddPlayerSides)
-                {
                     dd.Items[1 + c].Selectable = !disabled;
-                }
+
                 foreach (PlayerInfo pInfo in concatPlayerList)
                 {
                     if (pInfo.SideId == 1 + c && disabled)
                         pInfo.SideId = defaultSide;
                 }
+
                 c++;
             }
 
@@ -915,9 +912,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (disabled)
                 {
                     foreach (XNADropDown dd in ddPlayerSides)
-                    {
                         dd.Items[i + RandomSelectorCount].Selectable = false;
-                    }
 
                     // Change the sides of players that use the disabled 
                     // side to the default side
@@ -930,9 +925,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 else
                 {
                     foreach (XNADropDown dd in ddPlayerSides)
-                    {
                         dd.Items[i + RandomSelectorCount].Selectable = true;
-                    }
                 }
             }
 
@@ -1015,9 +1008,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             // Gather list of spectators
             for (int i = 0; i < Players.Count; i++)
-            {
                 houseInfos[i].IsSpectator = Players[i].SideId == GetSpectatorSideIndex();
-            }
 
             // Gather list of available colors
 
@@ -1059,9 +1050,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             for (int i = 0; i < AIPlayers.Count; i++)
-            {
                 freeStartingLocations.Remove(AIPlayers[i].StartingLocation - 1);
-            }
 
             // Randomize options
 
@@ -1073,17 +1062,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 PlayerHouseInfo pHouseInfo = houseInfos[i];
 
                 if (i < Players.Count)
-                {
                     pInfo = Players[i];
-                }
                 else
                     pInfo = AIPlayers[i - Players.Count];
 
                 pHouseInfo.RandomizeSide(pInfo, SideCount, random, GetDisallowedSides(), RandomSelectors, RandomSelectorCount);
 
                 pHouseInfo.RandomizeColor(pInfo, freeColors, MPColors, random);
-                pHouseInfo.RandomizeStart(pInfo, Map,
-                    freeStartingLocations, random, takenStartingLocations);
+                pHouseInfo.RandomizeStart(pInfo, Map, freeStartingLocations, random, takenStartingLocations);
             }
 
             return houseInfos;
@@ -1119,7 +1105,21 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             settings.SetStringValue("UIMapName", Map.Name);
             settings.SetIntValue("PlayerCount", Players.Count);
             int myIndex = Players.FindIndex(c => c.Name == ProgramConstants.PLAYERNAME);
-            settings.SetIntValue("Side", houseInfos[myIndex].SideIndex);
+
+            if (houseInfos[myIndex].IsSpectator && !string.IsNullOrEmpty(ClientConfiguration.Instance.SpectatorInternalSideId))
+            {
+                settings.SetIntValue("Side", int.Parse(ClientConfiguration.Instance.SpectatorInternalSideId));
+            }
+            else if (string.IsNullOrEmpty(ClientConfiguration.Instance.InternalSideIds))
+            {
+                settings.SetIntValue("Side", houseInfos[myIndex].SideIndex);
+            }
+            else
+            {
+                int[] sideIds = Array.ConvertAll(ClientConfiguration.Instance.InternalSideIds.Split(','), int.Parse);
+                settings.SetIntValue("Side", sideIds[houseInfos[myIndex].SideIndex]);
+            }
+            
             settings.SetBooleanValue("IsSpectator", houseInfos[myIndex].IsSpectator);
             settings.SetIntValue("Color", houseInfos[myIndex].ColorIndex);
             settings.SetStringValue("CustomLoadScreen", LoadingScreenController.GetLoadScreenName(houseInfos[myIndex].SideIndex));
@@ -1170,7 +1170,21 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 string sectionName = "Other" + otherId;
 
                 spawnIni.SetStringValue(sectionName, "Name", pInfo.Name);
-                spawnIni.SetIntValue(sectionName, "Side", pHouseInfo.SideIndex);
+
+                if (pHouseInfo.IsSpectator && !string.IsNullOrEmpty(ClientConfiguration.Instance.SpectatorInternalSideId))
+                {
+                    spawnIni.SetIntValue(sectionName, "Side", int.Parse(ClientConfiguration.Instance.SpectatorInternalSideId));
+                }
+                else if (string.IsNullOrEmpty(ClientConfiguration.Instance.InternalSideIds))
+                {
+                    spawnIni.SetIntValue(sectionName, "Side", pHouseInfo.SideIndex);
+                }
+                else
+                {
+                    int[] sideIds = Array.ConvertAll(ClientConfiguration.Instance.InternalSideIds.Split(','), int.Parse);
+                    spawnIni.SetIntValue(sectionName, "Side", sideIds[pHouseInfo.SideIndex]);
+                }
+
                 spawnIni.SetBooleanValue(sectionName, "IsSpectator", pHouseInfo.IsSpectator);
                 spawnIni.SetIntValue(sectionName, "Color", pHouseInfo.ColorIndex);
                 spawnIni.SetStringValue(sectionName, "Ip", GetIPAddressForPlayer(pInfo));
@@ -1199,7 +1213,21 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     string keyName = "Multi" + multiId;
 
                     spawnIni.SetIntValue("HouseHandicaps", keyName, AIPlayers[aiId].AILevel);
-                    spawnIni.SetIntValue("HouseCountries", keyName, houseInfos[Players.Count + aiId].SideIndex);
+
+                    if (houseInfos[Players.Count + aiId].IsSpectator && !string.IsNullOrEmpty(ClientConfiguration.Instance.SpectatorInternalSideId))
+                    {
+                        spawnIni.SetIntValue("HouseCountries", keyName, int.Parse(ClientConfiguration.Instance.SpectatorInternalSideId));
+                    }
+                    else if (string.IsNullOrEmpty(ClientConfiguration.Instance.InternalSideIds))
+                    {
+                        spawnIni.SetIntValue("HouseCountries", keyName, houseInfos[Players.Count + aiId].SideIndex);
+                    }
+                    else
+                    {
+                        int[] sideIds = Array.ConvertAll(ClientConfiguration.Instance.InternalSideIds.Split(','), int.Parse);
+                        spawnIni.SetIntValue("HouseCountries", keyName, sideIds[houseInfos[Players.Count + aiId].SideIndex]);
+                    }
+
                     spawnIni.SetIntValue("HouseColors", keyName, houseInfos[Players.Count + aiId].ColorIndex);
                 }
             }
@@ -1623,7 +1651,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             PlayerUpdatingInProgress = true;
 
             bool allowOptionsChange = AllowPlayerOptionsChange();
-
+            
             // Human players
             for (int pId = 0; pId < Players.Count; pId++)
             {
