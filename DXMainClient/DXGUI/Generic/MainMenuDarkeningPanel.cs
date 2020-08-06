@@ -22,13 +22,19 @@ namespace DTAClient.DXGUI.Generic
         }
 
         private DiscordHandler discordHandler;
-
         public CampaignSelector CampaignSelector;
+        public CampaignSelectorRA2 CampaignSelectorRA2;
+        public CampaignSelectorYR CampaignSelectorYR;
+        public CampaignSelectorGEN CampaignSelectorGEN;
+        public CampaignSelectorROTE CampaignSelectorROTE;
+        public ChallengeSelector ChallengeSelector;
         public GameLoadingWindow GameLoadingWindow;
         public StatisticsWindow StatisticsWindow;
         public UpdateQueryWindow UpdateQueryWindow;
+        public ManualUpdateQueryWindow ManualUpdateQueryWindow;
         public UpdateWindow UpdateWindow;
         public ExtrasWindow ExtrasWindow;
+        public CampaignWindow CampaignWindow;
 
         const float BG_ALPHA_APPEAR_RATE = 0.1f;
         const float BG_ALPHA_DISAPPEAR_RATE = -0.1f;
@@ -52,6 +58,24 @@ namespace DTAClient.DXGUI.Generic
             CampaignSelector = new CampaignSelector(WindowManager, discordHandler);
             AddChild(CampaignSelector);
 
+            CampaignSelectorRA2 = new CampaignSelectorRA2(WindowManager, discordHandler);
+            AddChild(CampaignSelectorRA2);
+
+            CampaignSelectorYR = new CampaignSelectorYR(WindowManager, discordHandler);
+            AddChild(CampaignSelectorYR);
+
+            CampaignSelectorGEN = new CampaignSelectorGEN(WindowManager, discordHandler);
+            AddChild(CampaignSelectorGEN);
+
+            CampaignSelectorROTE = new CampaignSelectorROTE(WindowManager, discordHandler);
+            AddChild(CampaignSelectorROTE);
+
+            ChallengeSelector = new ChallengeSelector(WindowManager, discordHandler);
+            AddChild(ChallengeSelector);
+
+            CampaignWindow = new CampaignWindow(WindowManager, discordHandler);
+            AddChild(CampaignWindow);
+
             GameLoadingWindow = new GameLoadingWindow(WindowManager, discordHandler);
             AddChild(GameLoadingWindow);
 
@@ -60,6 +84,9 @@ namespace DTAClient.DXGUI.Generic
 
             UpdateQueryWindow = new UpdateQueryWindow(WindowManager);
             AddChild(UpdateQueryWindow);
+
+            ManualUpdateQueryWindow = new ManualUpdateQueryWindow(WindowManager);
+            AddChild(ManualUpdateQueryWindow);
 
             UpdateWindow = new UpdateWindow(WindowManager);
             AddChild(UpdateWindow);
