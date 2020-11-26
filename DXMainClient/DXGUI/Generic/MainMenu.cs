@@ -110,7 +110,13 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnMapEditor;
         private XNAClientButton btnStatistics;
         private XNAClientButton btnCredits;
+        private XNAClientButton btnCampaignWindow;
         private XNAClientButton btnExtras;
+        private XNAClientButton btnRA2Campaign;
+        private XNAClientButton btnYRCampaign;
+        private XNAClientButton btnGENCampaign;
+        private XNAClientButton btnROTECampaign;
+        private XNAClientButton btnChallenge;
 
         /// <summary>
         /// Initializes the main menu's controls.
@@ -195,6 +201,48 @@ namespace DTAClient.DXGUI.Generic
             btnExtras.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
             btnExtras.LeftClick += BtnExtras_LeftClick;
 
+            btnCampaignWindow = new XNAClientButton(WindowManager);
+            btnCampaignWindow.Name = nameof(btnCampaignWindow);
+            btnCampaignWindow.IdleTexture = AssetLoader.LoadTexture("MainMenu\\extras.png");
+            btnCampaignWindow.HoverTexture = AssetLoader.LoadTexture("MainMenu\\extras_c.png");
+            btnCampaignWindow.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnCampaignWindow.LeftClick += BtnCampaignWindow_LeftClick;
+
+            btnRA2Campaign = new XNAClientButton(WindowManager);
+            btnRA2Campaign.Name = nameof(btnRA2Campaign);
+            btnRA2Campaign.IdleTexture = AssetLoader.LoadTexture("MainMenu\\extras.png");
+            btnRA2Campaign.HoverTexture = AssetLoader.LoadTexture("MainMenu\\extras_c.png");
+            btnRA2Campaign.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnRA2Campaign.LeftClick += BtnRA2Campaign_LeftClick;
+
+            btnYRCampaign = new XNAClientButton(WindowManager);
+            btnYRCampaign.Name = nameof(btnYRCampaign);
+            btnYRCampaign.IdleTexture = AssetLoader.LoadTexture("MainMenu\\extras.png");
+            btnYRCampaign.HoverTexture = AssetLoader.LoadTexture("MainMenu\\extras_c.png");
+            btnYRCampaign.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnYRCampaign.LeftClick += BtnYRCampaign_LeftClick;
+
+            btnGENCampaign = new XNAClientButton(WindowManager);
+            btnGENCampaign.Name = nameof(btnGENCampaign);
+            btnGENCampaign.IdleTexture = AssetLoader.LoadTexture("MainMenu\\extras.png");
+            btnGENCampaign.HoverTexture = AssetLoader.LoadTexture("MainMenu\\extras_c.png");
+            btnGENCampaign.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnGENCampaign.LeftClick += BtnGENCampaign_LeftClick;
+
+            btnROTECampaign = new XNAClientButton(WindowManager);
+            btnROTECampaign.Name = nameof(btnROTECampaign);
+            btnROTECampaign.IdleTexture = AssetLoader.LoadTexture("MainMenu\\extras.png");
+            btnROTECampaign.HoverTexture = AssetLoader.LoadTexture("MainMenu\\extras_c.png");
+            btnROTECampaign.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnROTECampaign.LeftClick += BtnROTECampaign_LeftClick;
+
+            btnChallenge = new XNAClientButton(WindowManager);
+            btnChallenge.Name = nameof(btnChallenge);
+            btnChallenge.IdleTexture = AssetLoader.LoadTexture("MainMenu\\extras.png");
+            btnChallenge.HoverTexture = AssetLoader.LoadTexture("MainMenu\\extras_c.png");
+            btnChallenge.HoverSoundEffect = new EnhancedSoundEffect("MainMenu\\button.wav");
+            btnChallenge.LeftClick += BtnChallenge_LeftClick;
+
             var btnExit = new XNAClientButton(WindowManager);
             btnExit.Name = nameof(btnExit);
             btnExit.IdleTexture = AssetLoader.LoadTexture("MainMenu/exitgame.png");
@@ -233,6 +281,11 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnExit);
             AddChild(lblCnCNetStatus);
             AddChild(lblCnCNetPlayerCount);
+            AddChild(btnRA2Campaign);
+            AddChild(btnYRCampaign);
+            AddChild(btnGENCampaign);
+            AddChild(btnROTECampaign);
+            AddChild(btnChallenge);
 
             if (!ClientConfiguration.Instance.ModMode)
             {
@@ -748,7 +801,7 @@ namespace DTAClient.DXGUI.Generic
         private void BtnOptions_LeftClick(object sender, EventArgs e) => optionsWindow.Open();
 
         private void BtnNewCampaign_LeftClick(object sender, EventArgs e) =>
-            innerPanel.Show(innerPanel.CampaignSelector);
+            innerPanel.Show(innerPanel.CampaignWindow);
 
         private void BtnLoadGame_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.GameLoadingWindow);
@@ -786,6 +839,36 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.ExtrasWindow);
+
+        private void BtnCampaignWindow_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignWindow);
+        }
+
+        private void BtnRA2Campaign_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorRA2);
+        }
+
+        private void BtnYRCampaign_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorYR);
+        }
+
+        private void BtnGENCampaign_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorGEN);
+        }
+
+        private void BtnROTECampaign_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorROTE);
+        }
+
+        private void BtnChallenge_LeftClick(object sender, EventArgs e)
+        {
+            innerPanel.Show(innerPanel.CampaignSelectorCHL);
+        }
 
         private void BtnExit_LeftClick(object sender, EventArgs e)
         {

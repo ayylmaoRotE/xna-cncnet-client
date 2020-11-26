@@ -30,6 +30,12 @@ namespace DTAClient.DXGUI.Generic
         public ManualUpdateQueryWindow ManualUpdateQueryWindow;
         public UpdateWindow UpdateWindow;
         public ExtrasWindow ExtrasWindow;
+        public CampaignWindow CampaignWindow;
+        public CampaignSelectorRA2 CampaignSelectorRA2;
+        public CampaignSelectorYR CampaignSelectorYR;
+        public CampaignSelectorGEN CampaignSelectorGEN;
+        public CampaignSelectorROTE CampaignSelectorROTE;
+        public CampaignSelectorCHL CampaignSelectorCHL;
 
         const float BG_ALPHA_APPEAR_RATE = 0.1f;
         const float BG_ALPHA_DISAPPEAR_RATE = -0.1f;
@@ -53,6 +59,21 @@ namespace DTAClient.DXGUI.Generic
             CampaignSelector = new CampaignSelector(WindowManager, discordHandler);
             AddChild(CampaignSelector);
 
+            CampaignSelectorRA2 = new CampaignSelectorRA2(WindowManager, discordHandler);
+            AddChild(CampaignSelectorRA2);
+
+            CampaignSelectorYR = new CampaignSelectorYR(WindowManager, discordHandler);
+            AddChild(CampaignSelectorYR);
+
+            CampaignSelectorGEN = new CampaignSelectorGEN(WindowManager, discordHandler);
+            AddChild(CampaignSelectorGEN);
+
+            CampaignSelectorROTE = new CampaignSelectorROTE(WindowManager, discordHandler);
+            AddChild(CampaignSelectorROTE);
+
+            CampaignSelectorCHL = new CampaignSelectorCHL(WindowManager, discordHandler);
+            AddChild(CampaignSelectorCHL);
+
             GameLoadingWindow = new GameLoadingWindow(WindowManager, discordHandler);
             AddChild(GameLoadingWindow);
 
@@ -67,6 +88,9 @@ namespace DTAClient.DXGUI.Generic
 
             UpdateWindow = new UpdateWindow(WindowManager);
             AddChild(UpdateWindow);
+
+            CampaignWindow = new CampaignWindow(WindowManager);
+            AddChild(CampaignWindow);
 
             ExtrasWindow = new ExtrasWindow(WindowManager);
             AddChild(ExtrasWindow);
