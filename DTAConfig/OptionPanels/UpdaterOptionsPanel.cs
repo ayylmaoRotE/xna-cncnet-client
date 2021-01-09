@@ -149,7 +149,7 @@ namespace DTAConfig.OptionPanels
 
         public override bool Save()
         {
-            base.Save();
+            bool restartRequired = base.Save();
 
             IniSettings.CheckForUpdates.Value = chkAutoCheck.Checked;
 
@@ -163,7 +163,7 @@ namespace DTAConfig.OptionPanels
                 id++;
             }
 
-            return false;
+            return restartRequired;
         }
 
         public override void ToggleMainMenuOnlyOptions(bool enable)

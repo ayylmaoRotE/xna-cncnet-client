@@ -91,9 +91,7 @@ namespace DTAConfig.OptionPanels
 
         public override bool Save()
         {
-            base.Save();
-
-            return false;
+            return base.Save();
         }
 
         private void UpdateInstallationButtons()
